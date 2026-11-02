@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Biricon IT Services GmbH
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_product_set_form" model="ir.ui.view">
+        <field name="name">product.set.form.layout</field>
+        <field name="model">product.set</field>
+        <field name="inherit_id" ref="product_set.view_product_set_form" />
+        <field name="arch" type="xml">
+            <group name="partner" position="inside">
+                <field name="insert_as_section" />
+                <field name="print_mode" invisible="not insert_as_section" />
+            </group>
+            <xpath expr="//field[@name='set_line_ids']/list/field[@name='quantity']" position="after">
+                <field name="fixed_price" optional="show" />
+                <field name="price_unit" invisible="not fixed_price" optional="show" />
+                <field name="hide_in_report" optional="show" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

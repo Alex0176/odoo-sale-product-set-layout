@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Biricon IT Services GmbH
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="product_set_add_form_view" model="ir.ui.view">
+        <field name="name">sale.product.set.wizard.form.layout</field>
+        <field name="model">sale.product.set.wizard</field>
+        <field name="inherit_id" ref="sale_product_set.product_set_add_form_view" />
+        <field name="arch" type="xml">
+            <field name="quantity" position="after">
+                <field name="insert_as_section" />
+                <field name="section_name" invisible="not insert_as_section" required="insert_as_section" />
+                <field name="print_mode" invisible="not insert_as_section" required="insert_as_section" />
+            </field>
+        </field>
+    </record>
+</odoo>
