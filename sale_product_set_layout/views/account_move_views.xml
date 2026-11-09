@@ -10,6 +10,17 @@
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="hide_in_report" optional="show" invisible="display_type != 'product'" />
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/control/button[@name='action_add_from_catalog']" position="before">
+                <button
+                    class="px-2 btn-link"
+                    type="action"
+                    name="%(act_open_wizard_product_set_add_from_move)d"
+                    groups="account.group_account_invoice"
+                    string="Add set"
+                    context="{'move_id': parent.id}"
+                    invisible="parent.state != 'draft' or parent.move_type not in ('out_invoice', 'out_refund')"
+                />
+            </xpath>
         </field>
     </record>
 </odoo>

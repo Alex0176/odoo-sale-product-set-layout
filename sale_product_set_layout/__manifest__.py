@@ -11,8 +11,10 @@
     "license": "AGPL-3",
     "depends": ["sale_management", "sale_product_set", "account"],
     "data": [
+        "security/ir.model.access.csv",
         "views/product_set_views.xml",
         "views/sale_order_views.xml",
+        "wizard/account_product_set_wizard_views.xml",
         "views/account_move_views.xml",
         "wizard/sale_product_set_wizard_views.xml",
     ],

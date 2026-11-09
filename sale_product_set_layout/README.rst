@@ -52,7 +52,7 @@ Usage
 1. *Sales → Products → Product Sets*: create a set, choose *Insert as section* and
    the *Print mode*, add the lines. Mark correction lines as *Hidden* and give them
    a *Fixed price* if needed.
-2. In a quotation click *Add set*, choose the set and the quantity.
+2. In a quotation or a draft customer invoice click *Add set*, choose the set and the quantity.
 3. Single order or invoice lines can be hidden with the column *Hidden in report*.
 
 Hidden lines are part of the totals but invisible on the document. Check whether
@@ -79,6 +79,9 @@ Extended models and added fields:
   ``prepare_sale_order_line_values()`` passes them to the order line
 - ``sale.product.set.wizard``: ``insert_as_section``, ``section_name``,
   ``print_mode``; ``_prepare_order_lines()`` builds the section
+- ``account.product.set.wizard``: counterpart for draft customer invoices
+  (``move_id``, ``insert_as_section``, ``section_name``); ``_prepare_move_lines()``
+  builds the section (the print mode is not applied)
 - ``sale.order`` / ``sale.order.line``: ``hide_in_report``;
   ``_get_order_lines_to_report()`` skips hidden lines; ``_prepare_invoice_line()``
   passes the flag on

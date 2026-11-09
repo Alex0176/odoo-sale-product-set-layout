@@ -1,5 +1,6 @@
 # Copyright 2026 Biricon IT Services GmbH
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -109,3 +110,33 @@ class TestSaleProductSetLayout(TransactionCase):
         self.assertNotIn(hidden_name, names)
         # section summary still carries the full amount
         self.assertAlmostEqual(section._get_child_lines()[0]["price_subtotal"], 130.0)
+
+    def test_add_set_to_invoice(self):
+        invoice = self.env["account.move"].create({"move_type": "out_invoice", "partner_id": self.partner.id})
+        wiz = self.env["account.product.set.wizard"].create(
+            {"move_id": invoice.id, "product_set_id": self.pset.id, "quantity": 2}
+        )
+        wiz.add_set()
+        section = invoice.invoice_line_ids.filtered(lambda l: l.display_type == "line_section")
+        self.assertEqual(section.name, "2 × Measuring kit")
+        self.assertEqual(
+            invoice.invoice_line_ids.filtered(lambda l: l.display_type == "line_subsection").name, "Options"
+        )
+        hidden = invoice.invoice_line_ids.filtered("hide_in_report")
+        self.assertEqual(hidden.product_id, self.p_corr)
+        self.assertAlmostEqual(hidden.price_unit, -20.0)
+        self.assertAlmostEqual(invoice.amount_untaxed, 260.0)
+        self.assertNotIn(hidden, invoice._get_move_lines_to_report())
+
+    def test_add_set_to_posted_invoice_refused(self):
+        invoice = self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner.id,
+                "invoice_line_ids": [(0, 0, {"product_id": self.p_main.id, "quantity": 1})],
+            }
+        )
+        invoice.action_post()
+        wiz = self.env["account.product.set.wizard"].create({"move_id": invoice.id, "product_set_id": self.pset.id})
+        with self.assertRaises(UserError):
+            wiz.add_set()

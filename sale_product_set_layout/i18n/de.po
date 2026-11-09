@@ -110,3 +110,47 @@ msgstr ""
 #: model:ir.model.fields,help:sale_product_set_layout.field_account_move_line__hide_in_report
 msgid "The line counts for the totals but is not printed on the invoice."
 msgstr "Die Position zählt zur Summe, wird aber auf der Rechnung nicht gedruckt."
+
+#. module: sale_product_set_layout
+#: model_terms:ir.ui.view,arch_db:sale_product_set_layout.view_move_form
+#: model_terms:ir.ui.view,arch_db:sale_product_set_layout.account_product_set_add_form_view
+msgid "Add set"
+msgstr "Produktset hinzufügen"
+
+#. module: sale_product_set_layout
+#: model:ir.actions.act_window,name:sale_product_set_layout.act_open_wizard_product_set_add_from_move
+#: model_terms:ir.ui.view,arch_db:sale_product_set_layout.account_product_set_add_form_view
+msgid "Add set to invoice"
+msgstr "Produktset zur Rechnung hinzufügen"
+
+#. module: sale_product_set_layout
+#: model_terms:ir.ui.view,arch_db:sale_product_set_layout.account_product_set_add_form_view
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: sale_product_set_layout
+#: model:ir.model.fields,field_description:sale_product_set_layout.field_account_product_set_wizard__move_id
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: sale_product_set_layout
+#: model:ir.model.fields,field_description:sale_product_set_layout.field_account_product_set_wizard__insert_as_section
+msgid "Insert As Section"
+msgstr "Als Abschnitt einfügen"
+
+#. module: sale_product_set_layout
+#: model:ir.model.fields,field_description:sale_product_set_layout.field_account_product_set_wizard__section_name
+msgid "Section Name"
+msgstr "Abschnittsbezeichnung"
+
+#. module: sale_product_set_layout
+#. odoo-python
+#: code:addons/sale_product_set_layout/wizard/account_product_set_wizard.py:0
+msgid "Product sets can only be added to draft invoices."
+msgstr "Produktsets können nur zu Rechnungsentwürfen hinzugefügt werden."
+
+#. module: sale_product_set_layout
+#. odoo-python
+#: code:addons/sale_product_set_layout/wizard/account_product_set_wizard.py:0
+msgid "You can use an invoice assigned only to the following partner: %s"
+msgstr "Diese Rechnung darf nur für folgenden Kunden verwendet werden: %s"

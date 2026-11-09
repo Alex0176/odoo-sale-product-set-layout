@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Biricon IT Services GmbH
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="account_product_set_add_form_view" model="ir.ui.view">
+        <field name="name">account.product.set.wizard.form</field>
+        <field name="model">account.product.set.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add set to invoice">
+                <group name="main" colspan="4">
+                    <field name="move_id" invisible="context.get('default_move_id')" />
+                    <field name="partner_id" invisible="1" />
+                    <field
+                        name="product_set_id"
+                        domain="['|', ('partner_id', '=', False), ('partner_id', '=', partner_id)]"
+                    />
+                    <field name="quantity" />
+                    <field name="insert_as_section" />
+                    <field name="section_name" invisible="not insert_as_section" required="insert_as_section" />
+                </group>
+                <group name="lines" colspan="4">
+                    <field
+                        name="product_set_line_ids"
+                        nolabel="1"
+                        colspan="4"
+                        widget="section_and_note_one2many"
+                        domain="[('product_set_id', '=', product_set_id)]"
+                    >
+                        <list>
+                            <field name="product_id" options="{'no_open': True, 'no_create': True}" required="not display_type" />
+                            <field name="display_type" column_invisible="True" />
+                            <field name="name" widget="section_and_note_text" />
+                            <field name="quantity" />
+                            <field name="product_uom_id" groups="uom.group_uom" />
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button name="add_set" string="Add set" type="object" class="oe_highlight" />
+                    <button special="cancel" string="Cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="act_open_wizard_product_set_add_from_move" model="ir.actions.act_window">
+        <field name="name">Add set to invoice</field>
+        <field name="res_model">account.product.set.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_product_set_add_form_view" />
+        <field name="target">new</field>
+        <field name="context">{'default_move_id': move_id}</field>
+    </record>
+</odoo>
