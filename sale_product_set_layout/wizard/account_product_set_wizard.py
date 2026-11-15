@@ -109,5 +109,12 @@ class AccountProductSetWizard(models.TransientModel):
             )
         commands = self._prepare_move_lines()
         if commands:
-            self.move_id.write({"invoice_line_ids": commands})
+            # The invoice line list passes its own context (journal_id, default_*, quick_encoding_vals)
+            # to the button. It must not leak into the creation of the lines.
+            context = {
+                key: value
+                for key, value in self.env.context.items()
+                if key not in ("journal_id", "quick_encoding_vals") and not key.startswith("default_")
+            }
+            self.move_id.with_context(context).write({"invoice_line_ids": commands})
         return {"type": "ir.actions.act_window_close"}

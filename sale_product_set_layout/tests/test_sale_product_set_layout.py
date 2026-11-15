@@ -128,6 +128,38 @@ class TestSaleProductSetLayout(TransactionCase):
         self.assertAlmostEqual(invoice.amount_untaxed, 260.0)
         self.assertNotIn(hidden, invoice._get_move_lines_to_report())
 
+    def test_add_set_with_invoice_line_list_context(self):
+        """The line list of the invoice form sends its own context with the button
+        (journal_id, default_*, quick_encoding_vals). It must not reach the new lines."""
+        invoice = self.env["account.move"].create({"move_type": "out_invoice", "partner_id": self.partner.id})
+        context = {
+            "journal_id": invoice.journal_id.id,
+            "default_move_type": "out_invoice",
+            "default_partner_id": invoice.partner_id.id,
+            "default_currency_id": invoice.currency_id.id,
+            "default_display_type": "product",
+            "quick_encoding_vals": invoice.quick_encoding_vals,
+            "move_id": invoice.id,
+        }
+        wiz = (
+            self.env["account.product.set.wizard"]
+            .with_context(**context)
+            .create({"move_id": invoice.id, "product_set_id": self.pset.id, "quantity": 1})
+        )
+        wiz.add_set()
+        # Same result as from a call without that context.
+        plain = self.env["account.move"].create({"move_type": "out_invoice", "partner_id": self.partner.id})
+        self.env["account.product.set.wizard"].create(
+            {"move_id": plain.id, "product_set_id": self.pset.id, "quantity": 1}
+        ).add_set()
+
+        def shape(move):
+            return [(line.display_type, line.product_id.id, line.quantity) for line in move.invoice_line_ids]
+
+        self.assertTrue(invoice.invoice_line_ids.filtered(lambda line: line.display_type == "product"))
+        self.assertEqual(shape(invoice), shape(plain))
+        self.assertEqual(invoice.state, "draft")
+
     def test_add_set_to_posted_invoice_refused(self):
         invoice = self.env["account.move"].create(
             {
