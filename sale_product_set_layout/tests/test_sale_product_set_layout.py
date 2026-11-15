@@ -132,6 +132,14 @@ class TestSaleProductSetLayout(TransactionCase):
         """The line list of the invoice form sends its own context with the button
         (journal_id, default_*, quick_encoding_vals). It must not reach the new lines."""
         invoice = self.env["account.move"].create({"move_type": "out_invoice", "partner_id": self.partner.id})
+        # With a default account on the journal and journal_id in the context, the default_get of
+        # account.move.line puts a record (not an id) into the defaults; the insert then fails
+        # with "can't adapt type 'account.account'".
+        income = self.env["account.account"].search(
+            [("account_type", "=", "income"), ("company_ids", "in", invoice.company_id.id)], limit=1
+        )
+        self.assertTrue(income)
+        invoice.journal_id.default_account_id = income
         context = {
             "journal_id": invoice.journal_id.id,
             "default_move_type": "out_invoice",
