@@ -49,6 +49,11 @@ class ProductSetLine(models.Model):
     def prepare_sale_order_line_values(self, order, quantity, sequence=0):
         res = super().prepare_sale_order_line_values(order, quantity, sequence=sequence)
         if not self.display_type:
+            if not self.name:
+                # Without an own text on the set line the standard computes the line name
+                # ("[CODE] product name" + sales description). Passing product.name here made the
+                # name differ from the product's display name, so the form showed it twice.
+                res.pop("name", None)
             res["hide_in_report"] = self.hide_in_report
             if self.fixed_price:
                 res["price_unit"] = self.price_unit

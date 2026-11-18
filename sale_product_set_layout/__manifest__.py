@@ -18,5 +18,8 @@
         "views/account_move_views.xml",
         "wizard/sale_product_set_wizard_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": ["sale_product_set_layout/static/src/js/resequence_guard.js"],
+    },
     "installable": True,
 }
